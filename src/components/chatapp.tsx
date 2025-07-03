@@ -57,6 +57,17 @@ const ChatApp: React.FC = () => {
       setIsConnected(false);
     });
 
+    newSocket.on('join', (data: { success: boolean; message: string }) => {
+      console.log('data',data)
+    if (data.success) {
+      setIsJoined(true);
+      // alert(data.message);
+    } else {
+      setIsJoined(false);
+      alert(data.message);
+    }
+  });
+
     newSocket.on('message', (data: MessageData) => {
       setMessages(prev => [...prev, { ...data, type: 'message' }]);
     });
@@ -150,7 +161,6 @@ const ChatApp: React.FC = () => {
     
     if (validateUsername(trimmedUsername) && socket) {
       socket.emit('join', trimmedUsername);
-      setIsJoined(true);
     }
   };
 
@@ -219,11 +229,11 @@ const ChatApp: React.FC = () => {
 
   if (!isJoined) {
     return (
-      <div className="login-container mx-auto">
-        <div className="login-card">
+      <div className="login-container mx-auto d-flex align-items-center justify-content-center vh-100">
+        <div className="login-card bg-white shadow rounded-4 p-3">
           <div className="card-body p-4">
             <div className="text-center">
-              <i className="fas fa-comments fa-3x text-primary mb-3"></i>
+              <i className="fas fa-comments fa-3x text-purple mb-3"></i>
               <h2 className="card-title text-dark">Join Chat Room</h2>
               <p className="text-muted">Enter your username to start chatting</p>
             </div>
@@ -287,9 +297,9 @@ const ChatApp: React.FC = () => {
 
         {/* Main Chat Area */}
         <div className="col-md-9">
-          <div className="chat-main">
+          <div className="chat-main vh-100 d-flex flex-column">
             {/* Chat Header */}
-            <div className="chat-header d-flex justify-content-between align-items-center">
+            <div className="chat-header d-flex justify-content-between align-items-center text-white p-4">
               <div className="d-flex align-items-center">
                 <button 
                   className="btn btn-link text-white mobile-toggle me-3 d-md-none"
@@ -330,12 +340,19 @@ const ChatApp: React.FC = () => {
                     <span className="badge notification-badge">{msg.message}</span>
                   ) : (
                     <div className={`message-bubble ${msg.username === username ? 'message-sent' : 'message-received'}`}>
+                       {/* {msg.username !== username && (
+                          <div className="d-flex align-items-start me-2">
+                            <div className="rounded-circle bg-purple text-white d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px' }}>
+                              {msg.username.charAt(0).toUpperCase()}
+                            </div>
+                          </div>
+                        )} */}
                       <div className="card">
                         <div className="card-body">
                           {msg.username !== username && (
                             <div className="message-username">{msg.username}</div>
                           )}
-                          <div className="message-content">{msg.message}</div>
+                          <div className="">{msg.message}</div>
                           <div className="message-time">
                             {formatTime(msg.timestamp)}
                           </div>

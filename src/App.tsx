@@ -1,5 +1,6 @@
 import ChatApp from './components/chatapp'
 import './App.css'
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function App() {
   return (
